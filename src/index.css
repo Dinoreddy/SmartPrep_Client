@@ -1,3 +1,48 @@
 @import "tailwindcss";
 
-/* Global styles */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Brand colors */
+  --color-primary: #256af4;
+  --color-background-light: #f5f6f8;
+  --color-background-dark: #101622;
+  --color-mint-soft: #e0f2fe;
+  --color-indigo-soft: #e0e7ff;
+  --color-accent-yellow: #fef08a;
+  --color-accent-coral: #fecaca;
+  --color-slate-custom: #475569;
+
+  /* Typography */
+  --font-display: "Space Grotesk", sans-serif;
+
+  /* Shadows */
+  --shadow-bouncy:
+    0 10px 15px -3px rgba(37, 106, 244, 0.1),
+    0 4px 6px -2px rgba(37, 106, 244, 0.05);
+  --shadow-hard: 4px 4px 0px 0px #1e293b;
+
+  /* Border radius overrides to match design */
+  --radius: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2.5rem;
+}
+
+@keyframes scan {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(200%);
+    opacity: 0;
+  }
+}
+
+body {
+  font-family: "Space Grotesk", sans-serif;
+  overflow-x: hidden;
+}

@@ -1,7 +1,7 @@
 import { useRoutes } from "react-router-dom";
 import type { RouteObject } from "react-router-dom";
 import { routes } from "./paths";
-import HomePage from "../pages/HomePage";
+import LandingPage from "../pages/LandingPage";
 import ProtectedRoute from "./ProtectedRoute";
 
 // Add new routes here — no need to touch App.tsx
@@ -9,7 +9,7 @@ const routeConfig: RouteObject[] = [
   // Public routes
   {
     path: routes.home,
-    element: <HomePage />,
+    element: <LandingPage />,
   },
 
   // Protected routes — uncomment and add pages as you build them
@@ -26,7 +26,7 @@ const routeConfig: RouteObject[] = [
   // Catch-all
   {
     path: "*",
-    element: <HomePage />,
+    element: <LandingPage />,
   },
 ];
 
