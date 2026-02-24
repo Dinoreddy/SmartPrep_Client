@@ -2,6 +2,8 @@ import { useRoutes } from "react-router-dom";
 import type { RouteObject } from "react-router-dom";
 import { routes } from "./paths";
 import LandingPage from "../pages/LandingPage";
+import OnboardingPage from "../pages/OnboardingPage";
+import LoginPage from "../pages/LoginPage";
 import ProtectedRoute from "./ProtectedRoute";
 
 // Add new routes here — no need to touch App.tsx
@@ -10,6 +12,14 @@ const routeConfig: RouteObject[] = [
   {
     path: routes.home,
     element: <LandingPage />,
+  },
+  {
+    path: routes.onboarding,
+    element: <OnboardingPage />,
+  },
+  {
+    path: routes.login,
+    element: <LoginPage />,
   },
 
   // Protected routes — uncomment and add pages as you build them

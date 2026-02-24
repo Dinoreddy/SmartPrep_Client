@@ -2,7 +2,7 @@ export const routes = {
   // Public
   home: "/",
   login: "/login",
-  register: "/register",
+  onboarding: "/onboarding",
 
   // Protected
   dashboard: "/dashboard",

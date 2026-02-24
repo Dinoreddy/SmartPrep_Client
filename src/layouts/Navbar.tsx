@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import { routes } from "../routes/paths";
+
 export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 flex items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-6 py-4 md:px-12 lg:px-20">
@@ -23,9 +26,12 @@ export default function Navbar() {
             GitHub
           </a>
         </nav>
-        <button className="flex h-10 items-center justify-center rounded-full bg-slate-900 dark:bg-white px-6 text-sm font-bold text-white dark:text-slate-900 shadow-lg transition-transform hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0">
+        <Link
+          to={routes.onboarding}
+          className="flex h-10 items-center justify-center rounded-full bg-slate-900 dark:bg-white px-6 text-sm font-bold text-white dark:text-slate-900 shadow-lg transition-transform hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0"
+        >
           Sign Up/In
-        </button>
+        </Link>
       </div>
 
       <button className="md:hidden p-2 text-slate-900 dark:text-white">
