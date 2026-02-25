@@ -10,7 +10,7 @@ import {
 } from "./constants";
 
 // Placeholder — replace with real auth data
-const USER_NAME = "Naishad";
+const USER_NAME = "Dino";
 const STREAK_DAYS = 4;
 
 export default function DashboardPage() {

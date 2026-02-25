@@ -3,16 +3,26 @@ import { routes } from "../routes/paths";
 
 const NAV_ITEMS = [
   { icon: "home", label: "Home", to: routes.dashboard, fill: true },
-  { icon: "sensors", label: "Real Time Interview", to: routes.liveInterview },
-  { icon: "quiz", label: "Mock Tests", to: routes.mockTest },
-  { icon: "track_changes", label: "Practice", to: routes.practice },
-  { icon: "analytics", label: "Analytics", to: routes.analytics },
+  {
+    icon: "sensors",
+    label: "Real Time Interview",
+    to: routes.liveInterview,
+    fill: false,
+  },
+  { icon: "quiz", label: "Mock Tests", to: routes.mockTest, fill: false },
+  {
+    icon: "track_changes",
+    label: "Practice",
+    to: routes.practice,
+    fill: false,
+  },
+  { icon: "analytics", label: "Analytics", to: routes.analytics, fill: false },
 ] as const;
 
 // Placeholder user — swap for real auth store data when ready
 const USER = {
-  name: "Naishad P.",
-  role: "Pro Member",
+  name: "Dino Y",
+  role: "User",
   avatar:
     "https://lh3.googleusercontent.com/aida-public/AB6AXuAZ3hwwL7wY4rsKVhAn008M0VXPglRfkBxoktnLHl-EoI34NkeQeirlk6NaTYs9GII3L3oJ2VX0qmX7Zo7pL16RbATUy42VyCot3tjVZ2WvbBAyIX9PDdRUryxvRbi2UKJmIXKnHC6aoizW9QpYg2Yn0Sq-ddBBGl7ndCy_MAP39AajI_PbztI-hee4IdcXq7Bl30ELuRLPd8hYssYSsUz94ryAx0HP5_PGHpMf1quJAn8LKprzehSaP0SQ5UVPF2pLY-LMHOe_9iCb",
 };
