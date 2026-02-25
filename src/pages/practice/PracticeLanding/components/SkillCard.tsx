@@ -1,4 +1,4 @@
-import { getSkillIcon } from "../../../lib/skillIconRegistry";
+import { getSkillIcon } from "@/lib/skillIconRegistry";
 
 /** Semi-circular gauge using conic-gradient. */
 function SkillGauge({ solved, total }: { solved: number; total: number }) {

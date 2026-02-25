@@ -1,19 +1,17 @@
 import { useRoutes } from "react-router-dom";
 import type { RouteObject } from "react-router-dom";
-import { routes } from "./paths";
+import { routes } from "@/routes/paths";
 
 // Public pages
-import LandingPage from "../pages/LandingPage";
-import OnboardingPage from "../pages/OnboardingPage";
-import LoginPage from "../pages/LoginPage";
+import LandingPage from "@/pages/LandingPage";
+import OnboardingPage from "@/pages/OnboardingPage";
+import LoginPage from "@/pages/LoginPage";
 
 // Dashboard layout + pages
-import DashboardLayout from "../layouts/DashboardLayout";
-import DashboardPage from "../pages/DashboardPage";
-import PracticePage from "../pages/PracticePage";
-import MockTestPage from "../pages/MockTestPage";
-
-import ProtectedRoute from "./ProtectedRoute";
+import DashboardLayout from "@/layouts/DashboardLayout";
+import DashboardPage from "@/pages/dashboard/DashboardHome";
+import PracticePage from "@/pages/practice/PracticeLanding";
+import MockTestPage from "@/pages/mockTest/MockTestLanding";
 
 const routeConfig: RouteObject[] = [
   // ── Public ────────────────────────────────────────────────────────────────

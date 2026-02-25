@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import TextInput from "../../../components/ui/TextInput";
-import { routes } from "../../../routes/paths";
+import TextInput from "@/components/ui/TextInput";
+import { routes } from "@/routes/paths";
 
 interface Step1RegisterProps {
   onNext: () => void;

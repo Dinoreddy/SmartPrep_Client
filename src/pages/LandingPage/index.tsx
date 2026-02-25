@@ -1,5 +1,5 @@
-import Navbar from "../../layouts/Navbar";
-import Footer from "../../layouts/Footer";
+import Navbar from "@/layouts/Navbar";
+import Footer from "@/layouts/Footer";
 import HeroSection from "./components/HeroSection";
 import StatsBanner from "./components/StatsBanner";
 import ContextParsingSection from "./components/ContextParsingSection";

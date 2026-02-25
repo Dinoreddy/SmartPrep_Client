@@ -1,4 +1,4 @@
-import AnalyticsCard from "../../../components/AnalyticsCard";
+import AnalyticsCard from "@/components/AnalyticsCard";
 
 const cards = [
   {

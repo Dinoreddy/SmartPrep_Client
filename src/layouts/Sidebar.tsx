@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { routes } from "../routes/paths";
+import { routes } from "@/routes/paths";
 
 const NAV_ITEMS = [
   { icon: "home", label: "Home", to: routes.dashboard, fill: true },

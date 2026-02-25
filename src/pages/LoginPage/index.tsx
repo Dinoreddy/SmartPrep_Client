@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import TextInput from "../../components/ui/TextInput";
-import { routes } from "../../routes/paths";
+import TextInput from "@/components/ui/TextInput";
+import { routes } from "@/routes/paths";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
