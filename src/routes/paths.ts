@@ -10,5 +10,7 @@ export const routes = {
   mockTestActive: "/mock-test/:testId",
   liveInterview: "/live-interview",
   liveInterviewActive: "/live-interview/:sessionId",
+  practice: "/practice",
+  analytics: "/analytics",
   profile: "/profile",
 } as const;

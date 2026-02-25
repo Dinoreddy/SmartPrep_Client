@@ -1,43 +1,40 @@
 import { useRoutes } from "react-router-dom";
 import type { RouteObject } from "react-router-dom";
 import { routes } from "./paths";
+
+// Public pages
 import LandingPage from "../pages/LandingPage";
 import OnboardingPage from "../pages/OnboardingPage";
 import LoginPage from "../pages/LoginPage";
+
+// Dashboard layout + pages
+import DashboardLayout from "../layouts/DashboardLayout";
+import DashboardPage from "../pages/DashboardPage";
+
 import ProtectedRoute from "./ProtectedRoute";
 
-// Add new routes here — no need to touch App.tsx
 const routeConfig: RouteObject[] = [
-  // Public routes
+  // ── Public ────────────────────────────────────────────────────────────────
+  { path: routes.home, element: <LandingPage /> },
+  { path: routes.onboarding, element: <OnboardingPage /> },
+  { path: routes.login, element: <LoginPage /> },
+
+  // ── Dashboard (shared Sidebar layout) ──────────────────────────────────────
   {
-    path: routes.home,
-    element: <LandingPage />,
-  },
-  {
-    path: routes.onboarding,
-    element: <OnboardingPage />,
-  },
-  {
-    path: routes.login,
-    element: <LoginPage />,
+    element: <DashboardLayout />,
+    children: [
+      { path: routes.dashboard, element: <DashboardPage /> },
+      // Add more dashboard pages here as you build them:
+      // { path: routes.liveInterview, element: <LiveInterviewPage /> },
+      // { path: routes.mockTest,      element: <MockTestPage /> },
+      // { path: routes.practice,      element: <PracticePage /> },
+      // { path: routes.analytics,     element: <AnalyticsPage /> },
+      // { path: routes.profile,       element: <ProfilePage /> },
+    ],
   },
 
-  // Protected routes — uncomment and add pages as you build them
-  // {
-  //   element: <ProtectedRoute />,
-  //   children: [
-  //     { path: routes.dashboard, element: <DashboardPage /> },
-  //     { path: routes.mockTest, element: <MockTestPage /> },
-  //     { path: routes.liveInterview, element: <LiveInterviewPage /> },
-  //     { path: routes.profile, element: <ProfilePage /> },
-  //   ],
-  // },
-
-  // Catch-all
-  {
-    path: "*",
-    element: <LandingPage />,
-  },
+  // ── Catch-all ──────────────────────────────────────────────────────────────
+  { path: "*", element: <LandingPage /> },
 ];
 
 export default function AppRoutes() {
