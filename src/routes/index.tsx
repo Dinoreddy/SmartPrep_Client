@@ -11,6 +11,7 @@ import LoginPage from "../pages/LoginPage";
 import DashboardLayout from "../layouts/DashboardLayout";
 import DashboardPage from "../pages/DashboardPage";
 import PracticePage from "../pages/PracticePage";
+import MockTestPage from "../pages/MockTestPage";
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -26,9 +27,8 @@ const routeConfig: RouteObject[] = [
     children: [
       { path: routes.dashboard, element: <DashboardPage /> },
       { path: routes.practice, element: <PracticePage /> },
-      // Add more dashboard pages here as you build them:
+      { path: routes.mockTest, element: <MockTestPage /> },
       // { path: routes.liveInterview, element: <LiveInterviewPage /> },
-      // { path: routes.mockTest,      element: <MockTestPage /> },
       // { path: routes.analytics,     element: <AnalyticsPage /> },
       // { path: routes.profile,       element: <ProfilePage /> },
     ],
