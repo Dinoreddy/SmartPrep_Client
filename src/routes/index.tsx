@@ -12,12 +12,16 @@ import DashboardLayout from "@/layouts/DashboardLayout";
 import DashboardPage from "@/pages/dashboard/DashboardHome";
 import PracticePage from "@/pages/practice/PracticeLanding";
 import MockTestPage from "@/pages/mockTest/MockTestLanding";
+import ActiveSessionPage from "@/pages/practice/ActiveSession";
 
 const routeConfig: RouteObject[] = [
   // ── Public ────────────────────────────────────────────────────────────────
   { path: routes.home, element: <LandingPage /> },
   { path: routes.onboarding, element: <OnboardingPage /> },
   { path: routes.login, element: <LoginPage /> },
+
+  // ── Focused / full-screen (no sidebar) ───────────────────────────────────
+  { path: routes.practiceSession, element: <ActiveSessionPage /> },
 
   // ── Dashboard (shared Sidebar layout) ──────────────────────────────────────
   {

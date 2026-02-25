@@ -1,9 +1,18 @@
+import { useNavigate } from "react-router-dom";
 import WeakSkillBanner from "./components/WeakSkillBanner";
 import SkillCard from "./components/SkillCard";
 import AddSkillCard from "./components/AddSkillCard";
 import { PAGE_META, WEAK_SKILL, SKILLS } from "./constants";
+import { routes } from "@/routes/paths";
 
 export default function PracticePage() {
+  const navigate = useNavigate();
+
+  function goToSession(skillName: string) {
+    navigate(
+      routes.practiceSession.replace(":skillName", skillName.toLowerCase()),
+    );
+  }
   return (
     <div className="max-w-6xl mx-auto px-6 py-8 md:px-10 md:py-10">
       {/* ── Header ── */}
@@ -49,7 +58,11 @@ export default function PracticePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {SKILLS.map((skill) => (
-            <SkillCard key={skill.title} {...skill} />
+            <SkillCard
+              key={skill.title}
+              {...skill}
+              onPractice={() => goToSession(skill.title)}
+            />
           ))}
           <AddSkillCard />
         </div>

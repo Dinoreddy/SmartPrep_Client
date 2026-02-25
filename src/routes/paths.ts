@@ -11,6 +11,7 @@ export const routes = {
   liveInterview: "/live-interview",
   liveInterviewActive: "/live-interview/:sessionId",
   practice: "/practice",
+  practiceSession: "/practice/:skillName",
   analytics: "/analytics",
   profile: "/profile",
 } as const;

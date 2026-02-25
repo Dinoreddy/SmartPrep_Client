@@ -13,6 +13,12 @@
   --color-accent-coral: #fecaca;
   --color-slate-custom: #475569;
 
+  /* Success / result-state colours */
+  --color-success: #059669;
+  --color-success-bg: #ecfdf5;
+  --color-mint-border: #34d399;
+  --color-mint-bg: #d1fae5;
+
   /* Typography */
   --font-display: "Space Grotesk", sans-serif;
 
