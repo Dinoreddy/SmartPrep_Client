@@ -1,16 +1,29 @@
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { questionService } from "@/services/question.service";
 import WeakSkillBanner from "./components/WeakSkillBanner";
 import SkillCard from "./components/SkillCard";
 import AddSkillCard from "./components/AddSkillCard";
-import { PAGE_META, WEAK_SKILL, SKILLS } from "./constants";
+import { PAGE_META, WEAK_SKILL } from "./constants";
 import { routes } from "@/routes/paths";
 
 export default function PracticePage() {
   const navigate = useNavigate();
 
+  const { data: stats = [], isLoading } = useQuery({
+    queryKey: ["practiceStats"],
+    queryFn: () => questionService.fetchPracticeStats(),
+    refetchOnMount: "always",
+    staleTime: 0,
+  });
+
   function goToSession(skillName: string) {
     navigate(
-      routes.practiceSession.replace(":skillName", skillName.toLowerCase()),
+      // We encode the URI component just in case a skill has spaces/special chars
+      routes.practiceSession.replace(
+        ":skillName",
+        encodeURIComponent(skillName),
+      ),
     );
   }
   return (
@@ -56,13 +69,22 @@ export default function PracticePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {SKILLS.map((skill) => (
-              <SkillCard
-                key={skill.title}
-                {...skill}
-                onPractice={() => goToSession(skill.title)}
-              />
-            ))}
+            {isLoading ? (
+              <p className="text-secondary dark:text-gray-400">
+                Loading stats...
+              </p>
+            ) : (
+              stats.map((stat) => (
+                <SkillCard
+                  key={stat.name}
+                  title={stat.name}
+                  elo={stat.elo}
+                  solved={stat.solved}
+                  total={stat.total}
+                  onPractice={() => goToSession(stat.name)}
+                />
+              ))
+            )}
             <AddSkillCard />
           </div>
         </div>

@@ -1,26 +1,52 @@
+import { motion } from "framer-motion";
 import { getSkillIcon } from "@/lib/skillIconRegistry";
 
-/** Semi-circular gauge using conic-gradient. */
+/** Animated SVG Semi-circular gauge using framer-motion */
 function SkillGauge({ solved, total }: { solved: number; total: number }) {
-  const fillDeg = Math.min(Math.round((solved / total) * 180), 180);
+  const percent = total > 0 ? Math.min(solved / total, 1) : 0;
+
+  const width = 160; // 10rem = 160px
+  const height = 80; // 5rem = 80px
+  const strokeWidth = 12; // matching previous border-[12px]
+  const radius = (width - strokeWidth) / 2;
+  const circumference = Math.PI * radius;
+  const strokeDashoffset = circumference * (1 - percent);
+
+  // SVG Path for a semi-circle: Sweep from bottom-left to bottom-right
+  const pathD = `M ${strokeWidth / 2} ${height} A ${radius} ${radius} 0 0 1 ${width - strokeWidth / 2} ${height}`;
+
   return (
-    <div className="relative w-40 h-20 overflow-hidden mb-2">
-      <div className="absolute top-0 left-0 w-40 h-40 rounded-full border-[12px] border-slate-100 dark:border-slate-700" />
-      {fillDeg > 0 && (
-        <div
-          className="absolute top-0 left-0 w-40 h-40 rounded-full"
-          style={{
-            background: `conic-gradient(from 270deg, #34D399 0deg, #34D399 ${fillDeg}deg, transparent ${fillDeg}deg)`,
-            mask: "radial-gradient(transparent 55%, black 56%)",
-            WebkitMask: "radial-gradient(transparent 55%, black 56%)",
-            transform: "rotate(-90deg)",
-          }}
+    <div className="relative w-40 h-20 overflow-hidden mb-2 flex flex-col items-center justify-end">
+      <svg
+        width={width}
+        height={height}
+        viewBox={`0 0 ${width} ${height}`}
+        className="absolute top-0 left-0"
+      >
+        {/* Background Arc */}
+        <path
+          d={pathD}
+          fill="none"
+          className="stroke-slate-100 dark:stroke-slate-700"
+          strokeWidth={strokeWidth}
         />
-      )}
-      <div className="absolute w-full h-full flex items-end justify-center pb-1">
-        <span className="text-2xl font-black text-slate-900 dark:text-white">
-          {solved}
-          <span className="text-lg text-slate-400 font-medium">/{total}</span>
+        {/* Dynamic Animated Arc */}
+        <motion.path
+          d={pathD}
+          fill="none"
+          className="stroke-[#34D399]"
+          strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          initial={{ strokeDashoffset: circumference }}
+          animate={{ strokeDashoffset }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+        />
+      </svg>
+      {/* Inner Label */}
+      <div className="z-10 pb-1 leading-none font-black text-slate-900 dark:text-white flex items-baseline">
+        <span className="text-2xl">{solved}</span>
+        <span className="text-lg text-slate-400 font-medium ml-1">
+          /{total}
         </span>
       </div>
     </div>

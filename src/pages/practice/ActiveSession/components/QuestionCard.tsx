@@ -25,6 +25,7 @@ interface QuestionCardProps {
   onNext: () => void;
   canGoNext: boolean;
   isLastQuestion: boolean;
+  eloChange?: number; // Optional because it comes back async after answering
 }
 
 export default function QuestionCard({
@@ -43,6 +44,7 @@ export default function QuestionCard({
   onNext,
   canGoNext,
   isLastQuestion,
+  eloChange,
 }: QuestionCardProps) {
   const locked = answered || peeked;
   const isCorrect = answered && selectedAnswer === correctOptionIndex;
@@ -60,9 +62,9 @@ export default function QuestionCard({
         >
           {difficulty}
         </span>
-        <span className="text-slate-400 text-xs font-medium">
+        {/* <span className="text-slate-400 text-xs font-medium">
           {currentIndex + 1} / {totalQuestions}
-        </span>
+        </span> */}
       </div>
 
       {/* ── Question text ────────────────────────────────────────── */}
@@ -211,18 +213,20 @@ export default function QuestionCard({
                 {explanation}
               </p>
 
-              <div
-                className={`inline-flex items-center px-3.5 py-1.5 rounded-full border text-xs font-bold ${
-                  isCorrect
-                    ? "bg-success/10 border-success/20 text-success"
-                    : "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700 text-red-600 dark:text-red-400"
-                }`}
-              >
-                <span className="material-symbols-outlined text-[16px] mr-1.5">
-                  {isCorrect ? "trending_up" : "trending_down"}
-                </span>
-                {isCorrect ? "+14 Elo" : "−8 Elo"}
-              </div>
+              {eloChange !== undefined && (
+                <div
+                  className={`inline-flex items-center px-3.5 py-1.5 rounded-full border text-xs font-bold ${
+                    isCorrect
+                      ? "bg-success/10 border-success/20 text-success"
+                      : "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700 text-red-600 dark:text-red-400"
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-[16px] mr-1.5">
+                    {isCorrect ? "trending_up" : "trending_down"}
+                  </span>
+                  {eloChange > 0 ? `+${eloChange}` : eloChange} Elo
+                </div>
+              )}
             </>
           )}
 

@@ -18,11 +18,4 @@ export const WEAK_SKILL = {
 } as const;
 
 // ── Skill cards ───────────────────────────────────────────────────────────────
-// Icon + colour config is auto-resolved from skillIconRegistry by SkillCard.
-// Only data the API would return is needed here.
-export const SKILLS = [
-  { title: "React", elo: 1200, solved: 10, total: 50 },
-  { title: "NodeJS", elo: 1150, solved: 25, total: 50 },
-  { title: "SQL", elo: 1400, solved: 45, total: 50 },
-  { title: "MongoDB", elo: 980, solved: 5, total: 50 },
-] as const;
+// Rendered dynamically from user.skillElo inside PracticeLanding/index.tsx

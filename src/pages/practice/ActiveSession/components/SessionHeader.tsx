@@ -54,12 +54,12 @@ export default function SessionHeader({
       </div>
 
       {/* Progress bar */}
-      <div className="w-full h-0.5 bg-slate-100 dark:bg-slate-800">
+      {/* <div className="w-full h-0.5 bg-slate-100 dark:bg-slate-800">
         <div
           className="h-full bg-primary transition-all duration-500"
           style={{ width: `${progressPct}%` }}
         />
-      </div>
+      </div> */}
     </header>
   );
 }
