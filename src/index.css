@@ -52,3 +52,41 @@ body {
   font-family: "Space Grotesk", sans-serif;
   overflow-x: hidden;
 }
+
+/* ── Live Interview animations ──────────────────────────────────── */
+@keyframes wave-pulse {
+  0%,
+  100% {
+    transform: scaleY(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleY(1.5);
+    opacity: 0.8;
+  }
+}
+
+@keyframes core-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 20px 5px rgba(99, 102, 241, 0.5);
+    opacity: 0.8;
+  }
+  50% {
+    box-shadow: 0 0 40px 10px rgba(99, 102, 241, 0.8);
+    opacity: 1;
+  }
+}
+
+.animate-wave-pulse {
+  animation: wave-pulse 4s ease-in-out infinite;
+}
+.animate-wave-pulse-slow {
+  animation: wave-pulse 6s ease-in-out infinite;
+}
+.animate-wave-pulse-fast {
+  animation: wave-pulse 3s ease-in-out infinite;
+}
+.animate-core-pulse {
+  animation: core-pulse 2s ease-in-out infinite;
+}

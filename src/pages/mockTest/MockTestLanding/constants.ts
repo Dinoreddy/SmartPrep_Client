@@ -4,6 +4,21 @@ export const PAGE_META = {
   subtitle: "Prepare for your dream job with AI-powered simulations.",
 } as const;
 
+// ── Skills available for selection ───────────────────────────────────────────
+// Replace with data fetched from the user's profile once the backend is ready.
+export const MOCK_SKILLS = [
+  { name: "React", elo: 1250 },
+  { name: "NodeJS", elo: 1100 },
+  { name: "SQL", elo: 980 },
+  { name: "MongoDB", elo: 1015 },
+  { name: "Data Structures", elo: 850 },
+  { name: "System Design", elo: 750 },
+  { name: "TypeScript", elo: 1080 },
+  { name: "Python", elo: 920 },
+  { name: "CSS", elo: 1060 },
+  { name: "JavaScript", elo: 1140 },
+] as const;
+
 // ── Hero banner ───────────────────────────────────────────────────────────────
 export const HERO = {
   titleLine1: "Challenge Yourself with a",

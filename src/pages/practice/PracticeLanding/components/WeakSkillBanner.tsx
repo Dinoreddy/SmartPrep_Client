@@ -20,7 +20,7 @@ export default function WeakSkillBanner({
   onStart,
 }: WeakSkillBannerProps) {
   return (
-    <div className="relative overflow-hidden rounded-[2rem] bg-[#FFF8E1] dark:bg-amber-900/20 p-8 md:p-12 shadow-sm group hover:shadow-md transition-all">
+    <div className="relative overflow-hidden rounded-2xl bg-[#FFF8E1] dark:bg-amber-900/20 p-8 md:p-12 shadow-sm group hover:shadow-md transition-all">
       {/* Decorative blobs */}
       <div className="absolute -right-10 -top-10 h-64 w-64 rounded-full bg-amber-200/50 dark:bg-amber-600/10 blur-3xl group-hover:bg-amber-300/50 transition-colors duration-500" />
       <div className="absolute bottom-0 right-20 h-32 w-32 rounded-full bg-orange-200/40 dark:bg-orange-600/10 blur-2xl" />
@@ -29,7 +29,7 @@ export default function WeakSkillBanner({
         {/* Text block */}
         <div className="flex-1 text-center md:text-left">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-800/40 text-amber-700 dark:text-amber-200 text-xs font-bold uppercase tracking-wider mb-4">
-            <span className="material-symbols-outlined text-[16px]">
+            <span className="material-symbols-outlined text-amber-600 dark:text-amber-400 text-[28px] shrink-0">
               {labelIcon}
             </span>
             {label}
@@ -53,7 +53,7 @@ export default function WeakSkillBanner({
         </div>
 
         {/* CTA */}
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <button
             onClick={onStart}
             className="bg-primary hover:bg-purple-800 text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-primary/30 transform hover:-translate-y-1 transition-all flex items-center gap-3 text-lg"

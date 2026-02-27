@@ -13,6 +13,9 @@ import DashboardPage from "@/pages/dashboard/DashboardHome";
 import PracticePage from "@/pages/practice/PracticeLanding";
 import MockTestPage from "@/pages/mockTest/MockTestLanding";
 import ActiveSessionPage from "@/pages/practice/ActiveSession";
+import MockTestSessionPage from "@/pages/mockTest/MockTestSession";
+import LiveInterviewLandingPage from "@/pages/liveInterview/LiveInterviewLanding";
+import NotFoundPage from "@/pages/NotFoundPage";
 
 const routeConfig: RouteObject[] = [
   // ── Public ────────────────────────────────────────────────────────────────
@@ -22,6 +25,7 @@ const routeConfig: RouteObject[] = [
 
   // ── Focused / full-screen (no sidebar) ───────────────────────────────────
   { path: routes.practiceSession, element: <ActiveSessionPage /> },
+  { path: routes.mockTestSession, element: <MockTestSessionPage /> },
 
   // ── Dashboard (shared Sidebar layout) ──────────────────────────────────────
   {
@@ -30,14 +34,14 @@ const routeConfig: RouteObject[] = [
       { path: routes.dashboard, element: <DashboardPage /> },
       { path: routes.practice, element: <PracticePage /> },
       { path: routes.mockTest, element: <MockTestPage /> },
-      // { path: routes.liveInterview, element: <LiveInterviewPage /> },
+      { path: routes.liveInterview, element: <LiveInterviewLandingPage /> },
       // { path: routes.analytics,     element: <AnalyticsPage /> },
       // { path: routes.profile,       element: <ProfilePage /> },
     ],
   },
 
-  // ── Catch-all ──────────────────────────────────────────────────────────────
-  { path: "*", element: <LandingPage /> },
+  // ── Catch-all — 404 ─────────────────────────────────────────────────────────
+  { path: "*", element: <NotFoundPage /> },
 ];
 
 export default function AppRoutes() {
