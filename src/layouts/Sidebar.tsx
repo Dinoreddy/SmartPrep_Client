@@ -1,5 +1,8 @@
+import { useState, useRef, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { routes } from "@/routes/paths";
+import { useAuthStore } from "@/store/authStore";
+import { useLogout } from "@/hooks/useAuth";
 
 const NAV_ITEMS = [
   { icon: "home", label: "Home", to: routes.dashboard, fill: true },
@@ -19,20 +22,29 @@ const NAV_ITEMS = [
   { icon: "analytics", label: "Analytics", to: routes.analytics, fill: false },
 ] as const;
 
-// Placeholder user — swap for real auth store data when ready
-const USER = {
-  name: "Dino Y",
-  role: "User",
-  avatar:
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuAZ3hwwL7wY4rsKVhAn008M0VXPglRfkBxoktnLHl-EoI34NkeQeirlk6NaTYs9GII3L3oJ2VX0qmX7Zo7pL16RbATUy42VyCot3tjVZ2WvbBAyIX9PDdRUryxvRbi2UKJmIXKnHC6aoizW9QpYg2Yn0Sq-ddBBGl7ndCy_MAP39AajI_PbztI-hee4IdcXq7Bl30ELuRLPd8hYssYSsUz94ryAx0HP5_PGHpMf1quJAn8LKprzehSaP0SQ5UVPF2pLY-LMHOe_9iCb",
-};
-
 const ACTIVE_CLS =
   "flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary font-medium transition-colors";
 const INACTIVE_CLS =
   "flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors font-medium";
 
 export default function Sidebar() {
+  const user = useAuthStore((s) => s.user);
+  const { mutate: logout, isPending } = useLogout();
+
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close the menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    }
+    if (menuOpen) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [menuOpen]);
+
   return (
     <aside className="w-72 flex-shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex flex-col justify-between p-6">
       {/* Top: Logo + Nav */}
@@ -78,25 +90,71 @@ export default function Sidebar() {
       </div>
 
       {/* Bottom: User section */}
-      <div className="flex items-center gap-3 px-2 py-3 border-t border-slate-100 dark:border-slate-800 pt-6">
-        <div
-          className="h-10 w-10 rounded-full bg-slate-200 dark:bg-slate-700 bg-cover bg-center flex-shrink-0"
-          style={{ backgroundImage: `url('${USER.avatar}')` }}
-          aria-label="User profile picture"
-        />
-        <div className="flex flex-col overflow-hidden">
-          <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
-            {USER.name}
-          </p>
-          <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
-            {USER.role}
-          </p>
+      <div className="relative" ref={menuRef}>
+        {/* Settings dropdown menu */}
+        {menuOpen && (
+          <div className="absolute bottom-full mb-2 left-0 right-0 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-lg shadow-slate-200/60 dark:shadow-slate-900/60 overflow-hidden z-50">
+            <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
+              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                Account
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                setMenuOpen(false);
+                logout();
+              }}
+              disabled={isPending}
+              className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <span className="material-symbols-outlined text-[20px]">
+                logout
+              </span>
+              {isPending ? "Logging out…" : "Log out"}
+            </button>
+          </div>
+        )}
+
+        {/* User card */}
+        <div className="flex items-center gap-3 px-2 py-3 border-t border-slate-100 dark:border-slate-800 pt-6">
+          {/* Avatar initials */}
+          <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+            <span className="text-sm font-bold text-primary">
+              {user?.fullName
+                ? user.fullName
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .slice(0, 2)
+                    .toUpperCase()
+                : "?"}
+            </span>
+          </div>
+
+          <div className="flex flex-col overflow-hidden">
+            <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+              {user?.fullName ?? "—"}
+            </p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 truncate capitalize">
+              {user?.role ?? "—"}
+            </p>
+          </div>
+
+          <button
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label="Account settings"
+            aria-expanded={menuOpen}
+            className={`ml-auto transition-colors ${
+              menuOpen
+                ? "text-primary"
+                : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+            }`}
+          >
+            <span className="material-symbols-outlined text-[20px]">
+              settings
+            </span>
+          </button>
         </div>
-        <button className="ml-auto text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
-          <span className="material-symbols-outlined text-[20px]">
-            settings
-          </span>
-        </button>
       </div>
     </aside>
   );

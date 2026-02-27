@@ -1,26 +1,20 @@
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/authStore";
+import { routes } from "@/routes/paths";
 import SkillBadge from "../components/SkillBadge";
 import ProjectCard from "../components/ProjectCard";
 
-const skills = ["React", "NodeJS", "TypeScript", "System Design", "AWS"];
-
-const projects = [
-  {
-    icon: "deployed_code",
-    title: "E-commerce Microservices",
-    subtitle: "Node.js, Kubernetes, 50k+ daily transactions",
-  },
-  {
-    icon: "analytics",
-    title: "Real-time Analytics Dashboard",
-    subtitle: "React, D3.js, WebSockets, High-performance UI",
-  },
-];
-
 interface Step3SuccessProps {
-  onNext: () => void;
+  onNext: () => void; // kept for interface compatibility but unused — we navigate instead
 }
 
-export default function Step3Success({ onNext }: Step3SuccessProps) {
+export default function Step3Success(_: Step3SuccessProps) {
+  const navigate = useNavigate();
+  const user = useAuthStore((s) => s.user);
+
+  const skills = user?.resumeProfile?.skills ?? [];
+  const projects = user?.resumeProfile?.projects ?? [];
+
   return (
     <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-200 overflow-hidden">
       {/* Green success banner */}
@@ -43,34 +37,37 @@ export default function Step3Success({ onNext }: Step3SuccessProps) {
 
         <div className="w-full space-y-8 text-left">
           {/* Skills */}
-          <div>
-            <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">
-              Top Skills Found
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {skills.map((skill) => (
-                <SkillBadge key={skill} label={skill} />
-              ))}
-              <button className="inline-flex items-center px-3 py-1.5 rounded-full border border-dashed border-slate-300 text-slate-500 text-sm font-medium hover:bg-slate-50 transition-colors">
-                <span className="material-symbols-outlined text-[16px] mr-1">
-                  add
-                </span>
-                Add Skill
-              </button>
+          {skills.length > 0 && (
+            <div>
+              <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">
+                Top Skills Found
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {skills.map((skill) => (
+                  <SkillBadge key={skill} label={skill} />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Projects */}
-          <div>
-            <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">
-              Core Projects Identified
-            </h3>
-            <div className="space-y-3">
-              {projects.map((project) => (
-                <ProjectCard key={project.title} {...project} />
-              ))}
+          {projects.length > 0 && (
+            <div>
+              <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">
+                Core Projects Identified
+              </h3>
+              <div className="space-y-3">
+                {projects.map((project) => (
+                  <ProjectCard
+                    key={project.name}
+                    icon="deployed_code"
+                    title={project.name}
+                    subtitle={project.techStack.join(", ")}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Quick tip */}
           <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3">
@@ -85,18 +82,18 @@ export default function Step3Success({ onNext }: Step3SuccessProps) {
           </div>
         </div>
 
-        {/* CTA */}
+        {/* CTA — user is authenticated after registration, go straight to dashboard */}
         <div className="mt-10 w-full">
           <button
             type="button"
-            onClick={onNext}
+            onClick={() => navigate(routes.dashboard)}
             className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg py-4 px-8 rounded-xl shadow-lg shadow-indigo-600/25 transition-all transform hover:-translate-y-1 active:translate-y-0"
           >
-            <span>Go to My Dashboard</span>
+            <span>Go to Dashboard</span>
             <span className="text-xl">🚀</span>
           </button>
           <p className="mt-4 text-xs text-slate-400 font-medium text-center">
-            Entering your personalized preparation area...
+            Your personalized preparation area awaits…
           </p>
         </div>
       </div>

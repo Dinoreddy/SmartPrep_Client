@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import Step1Register from "./steps/Step1Register";
 import Step2ResumeUpload from "./steps/Step2ResumeUpload";
 import Step3Success from "./steps/Step3Success";
@@ -30,7 +31,9 @@ const STEP_META: Record<
 };
 
 export default function OnboardingPage() {
-  const [step, setStep] = useState<Step>(1);
+  const location = useLocation();
+  const initialStep = (location.state as { step?: Step } | null)?.step ?? 1;
+  const [step, setStep] = useState<Step>(initialStep);
 
   const goNext = () => setStep((s) => Math.min(s + 1, 3) as Step);
 

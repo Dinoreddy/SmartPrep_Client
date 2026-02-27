@@ -1,10 +1,46 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import TextInput from "@/components/ui/TextInput";
 import { routes } from "@/routes/paths";
+import { useLogin } from "@/hooks/useAuth";
+
+// ─── Validation Schema ────────────────────────────────────────────────────────
+
+const loginSchema = z.object({
+  email: z.string().min(1, "Email is required").email("Enter a valid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const { mutate: login, isPending, isError, error } = useLogin();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: "", password: "" },
+  });
+
+  const onSubmit = (values: LoginFormValues) => {
+    login({ email: values.email, password: values.password });
+  };
+
+  // Extract server error message (axios wraps it in error.response.data)
+  const serverError =
+    isError && error
+      ? ((error as { response?: { data?: { message?: string } } }).response
+          ?.data?.message ?? "Something went wrong. Please try again.")
+      : null;
 
   return (
     <div className="bg-slate-50 font-display antialiased min-h-screen flex flex-col">
@@ -40,7 +76,21 @@ export default function LoginPage() {
                 </p>
               </div>
 
-              <form className="space-y-5" noValidate>
+              {/* Server-level error banner */}
+              {serverError && (
+                <div className="mb-5 flex items-center justify-start gap-2.5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                  <span className="material-symbols-outlined text-[18px] mt-0.5 shrink-0">
+                    error
+                  </span>
+                  <span>{serverError}</span>
+                </div>
+              )}
+
+              <form
+                className="space-y-5"
+                noValidate
+                onSubmit={handleSubmit(onSubmit)}
+              >
                 <TextInput
                   label="Email Address"
                   id="login-email"
@@ -52,6 +102,8 @@ export default function LoginPage() {
                       mail
                     </span>
                   }
+                  error={errors.email?.message}
+                  {...register("email")}
                 />
 
                 <TextInput
@@ -71,6 +123,8 @@ export default function LoginPage() {
                     </span>
                   }
                   onRightIconClick={() => setShowPassword((v) => !v)}
+                  error={errors.password?.message}
+                  {...register("password")}
                 />
 
                 <div className="flex items-center justify-between pt-1">
@@ -93,13 +147,25 @@ export default function LoginPage() {
 
                 <div className="pt-4">
                   <button
-                    type="button"
-                    className="w-full flex justify-center items-center gap-2 py-4 px-4 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 transition-all shadow-lg shadow-indigo-200"
+                    type="submit"
+                    disabled={isPending}
+                    className="w-full flex justify-center items-center gap-2 py-4 px-4 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 transition-all shadow-lg shadow-indigo-200 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    Log In
-                    <span className="material-symbols-outlined text-lg">
-                      arrow_forward
-                    </span>
+                    {isPending ? (
+                      <>
+                        <span className="material-symbols-outlined text-lg animate-spin">
+                          progress_activity
+                        </span>
+                        Logging in…
+                      </>
+                    ) : (
+                      <>
+                        Log In
+                        <span className="material-symbols-outlined text-lg">
+                          arrow_forward
+                        </span>
+                      </>
+                    )}
                   </button>
                 </div>
               </form>

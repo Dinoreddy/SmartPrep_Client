@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import type { DragEvent, ChangeEvent } from "react";
+import { useUploadResume } from "@/hooks/useResume";
 
 const FILE_ICONS: Record<string, string> = {
   pdf: "picture_as_pdf",
@@ -28,10 +29,16 @@ export default function Step2ResumeUpload({ onNext }: Step2ResumeUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleFile = (selected: File) => {
-    setFile(selected);
-    console.log("Resume title:", selected.name);
-  };
+  const {
+    mutate: uploadResume,
+    isPending,
+    isError,
+    error,
+  } = useUploadResume({
+    onSuccess: onNext,
+  });
+
+  const handleFile = (selected: File) => setFile(selected);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
@@ -50,6 +57,16 @@ export default function Step2ResumeUpload({ onNext }: Step2ResumeUploadProps) {
     if (inputRef.current) inputRef.current.value = "";
   };
 
+  const handleSubmit = () => {
+    if (file) uploadResume(file);
+  };
+
+  const serverError =
+    isError && error
+      ? ((error as { response?: { data?: { message?: string } } }).response
+          ?.data?.message ?? "Upload failed. Please try again.")
+      : null;
+
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 md:p-12 flex flex-col items-center text-center">
       <div className="mb-10">
@@ -62,12 +79,21 @@ export default function Step2ResumeUpload({ onNext }: Step2ResumeUploadProps) {
         </p>
       </div>
 
+      {serverError && (
+        <div className="mb-6 w-full flex items-center gap-2.5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <span className="material-symbols-outlined text-[18px] shrink-0">
+            error
+          </span>
+          <span>{serverError}</span>
+        </div>
+      )}
+
       {/* Hidden file input */}
       <input
         ref={inputRef}
         id="resume-upload"
         type="file"
-        accept=".pdf,.docx,.doc,.txt"
+        accept=".pdf"
         className="hidden"
         onChange={handleChange}
         aria-label="Upload Resume"
@@ -90,15 +116,17 @@ export default function Step2ResumeUpload({ onNext }: Step2ResumeUploadProps) {
           <div className="flex items-center gap-3">
             <button
               type="button"
+              disabled={isPending}
               onClick={() => inputRef.current?.click()}
-              className="px-5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 text-sm font-bold hover:border-indigo-300 transition-all shadow-sm"
+              className="px-5 py-2 rounded-xl border border-gray-200 bg-white text-gray-700 text-sm font-bold hover:border-indigo-300 transition-all shadow-sm disabled:opacity-50"
             >
               Change File
             </button>
             <button
               type="button"
+              disabled={isPending}
               onClick={handleRemove}
-              className="px-5 py-2 rounded-xl border border-red-100 bg-red-50 text-red-500 text-sm font-bold hover:bg-red-100 transition-all"
+              className="px-5 py-2 rounded-xl border border-red-100 bg-red-50 text-red-500 text-sm font-bold hover:bg-red-100 transition-all disabled:opacity-50"
             >
               Remove
             </button>
@@ -137,9 +165,7 @@ export default function Step2ResumeUpload({ onNext }: Step2ResumeUploadProps) {
               <p className="text-gray-900 text-lg font-bold">
                 Click to upload or drag and drop
               </p>
-              <p className="text-gray-500 text-sm">
-                Supported formats: PDF, DOCX, TXT (Max 5MB)
-              </p>
+              <p className="text-gray-500 text-sm">PDF only (Max 5MB)</p>
             </div>
             <div className="mt-2 px-6 py-2.5 bg-white border border-gray-200 rounded-xl shadow-sm text-gray-700 text-sm font-bold group-hover:border-indigo-200 transition-all">
               Browse Files
@@ -153,16 +179,29 @@ export default function Step2ResumeUpload({ onNext }: Step2ResumeUploadProps) {
           <span className="material-symbols-outlined text-sm">lock</span>
           Your data is encrypted and secure.
         </div>
+
         {file ? (
           <button
             type="button"
-            onClick={onNext}
-            className="w-full flex justify-center items-center gap-2 py-4 px-4 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 transition-all shadow-lg shadow-indigo-200"
+            onClick={handleSubmit}
+            disabled={isPending}
+            className="w-full flex justify-center items-center gap-2 py-4 px-4 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Continue
-            <span className="material-symbols-outlined text-lg">
-              arrow_forward
-            </span>
+            {isPending ? (
+              <>
+                <span className="material-symbols-outlined text-lg animate-spin">
+                  progress_activity
+                </span>
+                Analyzing resume…
+              </>
+            ) : (
+              <>
+                Continue
+                <span className="material-symbols-outlined text-lg">
+                  arrow_forward
+                </span>
+              </>
+            )}
           </button>
         ) : (
           <button
