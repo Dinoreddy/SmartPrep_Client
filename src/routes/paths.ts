@@ -7,8 +7,8 @@ export const routes = {
   // Protected
   dashboard: "/dashboard",
   mockTest: "/mock-test",
-  mockTestSession: "/mock-test/session",
-  mockTestReport: "/mock-test/report",
+  mockTestSession: "/mock-test/session/:testId",
+  mockTestReport: "/mock-test/report/:testId",
   liveInterview: "/live-interview",
   liveInterviewActive: "/live-interview/:sessionId",
   practice: "/practice",

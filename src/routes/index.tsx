@@ -19,6 +19,7 @@ import PracticePage from "@/pages/practice/PracticeLanding";
 import MockTestPage from "@/pages/mockTest/MockTestLanding";
 import ActiveSessionPage from "@/pages/practice/ActiveSession";
 import MockTestSessionPage from "@/pages/mockTest/MockTestSession";
+import MockTestReportPage from "@/pages/mockTest/MockTestReport";
 import LiveInterviewLandingPage from "@/pages/liveInterview/LiveInterviewLanding";
 import NotFoundPage from "@/pages/NotFoundPage";
 
@@ -44,6 +45,7 @@ const routeConfig: RouteObject[] = [
           // Focused / full-screen sessions (no sidebar)
           { path: routes.practiceSession, element: <ActiveSessionPage /> },
           { path: routes.mockTestSession, element: <MockTestSessionPage /> },
+          { path: routes.mockTestReport, element: <MockTestReportPage /> },
 
           // Dashboard layout (shared sidebar)
           {

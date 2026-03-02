@@ -1,26 +1,4 @@
-// ─── Sub-models ──────────────────────────────────────────────────────────────
-
-export interface ProjectContext {
-  architecture: string;
-  keyFeatures: string[];
-  metrics: string;
-}
-
-export interface Project {
-  _id: string;
-  name: string;
-  description: string;
-  techStack: string[];
-  context: ProjectContext;
-}
-
-export interface ResumeProfile {
-  hasUploaded: boolean;
-  seniority: string;
-  yoe: number;
-  skills: string[];
-  projects: Project[];
-}
+import type { ResumeProfile } from "./resume";
 
 // ─── Core Entity ─────────────────────────────────────────────────────────────
 

@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { routes } from "@/routes/paths";
 import HeroBanner from "./components/HeroBanner";
 import MockStatCard from "./components/MockStatCard";
 import MockTestRow from "./components/MockTestRow";
 import SkillSelectModal from "./components/SkillSelectModal";
+import { mockTestApi } from "@/api/mockTest.api";
+import type { MockTestSkill } from "@/models/mockTest";
 import {
   PAGE_META,
   HERO,
-  MOCK_SKILLS,
   MOCK_STAT_CARDS,
   RECENT_MOCK_TESTS,
 } from "./constants";
@@ -16,10 +17,44 @@ import {
 export default function MockTestPage() {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
+  const [skills, setSkills] = useState<MockTestSkill[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleStartTest(selectedSkills: string[]) {
-    setShowModal(false);
-    navigate(routes.mockTestSession, { state: { selectedSkills } });
+  useEffect(() => {
+    async function fetchConfig() {
+      try {
+        const response = await mockTestApi.getConfig();
+        if (response.data.success) {
+          setSkills(response.data.data);
+        } else {
+          setError(response.data.message);
+        }
+      } catch (err: any) {
+        setError(err.response?.data?.message || "Failed to load skills.");
+      }
+    }
+    fetchConfig();
+  }, []);
+
+  async function handleStartTest(selectedSkills: string[]) {
+    try {
+      setIsLoading(true);
+      const response = await mockTestApi.start({ selectedSkills });
+      if (response.data.success) {
+        const testId = response.data.data._id || response.data.data.testId;
+        setShowModal(false);
+        navigate(routes.mockTestSession.replace(":testId", testId as string), {
+          state: { selectedSkills },
+        });
+      } else {
+        setError(response.data.message);
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to start test.");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -82,7 +117,7 @@ export default function MockTestPage() {
         {/* ── Skill selection modal ── */}
         {showModal && (
           <SkillSelectModal
-            skills={[...MOCK_SKILLS]}
+            skills={skills.map((s) => ({ name: s.skill, elo: s.elo }))}
             onStart={handleStartTest}
             onClose={() => setShowModal(false)}
           />

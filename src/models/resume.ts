@@ -11,6 +11,7 @@ export interface ProjectContext {
 }
 
 export interface ResumeProject {
+  _id?: string;
   name: string;
   techStack: string[];
   description: string;
