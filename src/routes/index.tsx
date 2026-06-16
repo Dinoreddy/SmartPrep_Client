@@ -21,6 +21,7 @@ import ActiveSessionPage from "@/pages/practice/ActiveSession";
 import MockTestSessionPage from "@/pages/mockTest/MockTestSession";
 import MockTestReportPage from "@/pages/mockTest/MockTestReport";
 import LiveInterviewLandingPage from "@/pages/liveInterview/LiveInterviewLanding";
+import { LiveSessionPage } from "@/pages/liveInterview/LiveSession/LiveSessionPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 
 const routeConfig: RouteObject[] = [
@@ -46,6 +47,7 @@ const routeConfig: RouteObject[] = [
           { path: routes.practiceSession, element: <ActiveSessionPage /> },
           { path: routes.mockTestSession, element: <MockTestSessionPage /> },
           { path: routes.mockTestReport, element: <MockTestReportPage /> },
+          { path: routes.liveInterviewActive, element: <LiveSessionPage /> },
 
           // Dashboard layout (shared sidebar)
           {

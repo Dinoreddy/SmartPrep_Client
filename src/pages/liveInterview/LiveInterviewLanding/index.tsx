@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+import { routes } from "@/routes/paths";
 import LiveHeroBanner from "./components/LiveHeroBanner";
 import {
   LIVE_STAT_CARDS,
@@ -7,9 +9,12 @@ import {
 } from "./constants";
 
 export default function LiveInterviewLandingPage() {
+  const navigate = useNavigate();
+
   function handleInitialize() {
-    // TODO: connect socket and navigate to active session
-    console.log("Initializing voice engine…");
+    // The actual interview ID is created inside the LiveSessionPage's hook,
+    // so we can just pass a temp ID here to satisfy the route param.
+    navigate(routes.liveInterviewActive.replace(":sessionId", "new"));
   }
 
   return (

@@ -8,12 +8,15 @@ import {
   RESUME_CONTEXT,
   TODAY_FOCUS,
 } from "./constants";
+import { useAuthStore } from "@/store/authStore";
 
 // Placeholder — replace with real auth data
-const USER_NAME = "Dino";
 const STREAK_DAYS = 4;
 
 export default function DashboardPage() {
+
+    const user = useAuthStore((s) => s.user);
+  
   return (
     <div className="p-8">
       <div className="max-w-6xl mx-auto flex flex-col gap-8">
@@ -21,7 +24,7 @@ export default function DashboardPage() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
-              Welcome back, {USER_NAME} 👋
+              Welcome back, {user?.username} 👋
             </h1>
             <p className="text-slate-500 dark:text-slate-400 mt-1">
               Ready to crush your next technical interview?
