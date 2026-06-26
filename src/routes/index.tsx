@@ -22,6 +22,7 @@ import MockTestSessionPage from "@/pages/mockTest/MockTestSession";
 import MockTestReportPage from "@/pages/mockTest/MockTestReport";
 import LiveInterviewLandingPage from "@/pages/liveInterview/LiveInterviewLanding";
 import { LiveSessionPage } from "@/pages/liveInterview/LiveSession/LiveSessionPage";
+import LiveInterviewReportPage from "@/pages/liveInterview/LiveInterviewReport";
 import NotFoundPage from "@/pages/NotFoundPage";
 import AnalyticsPage from "@/pages/analytics";
 import ProfilePage from "@/pages/profile";
@@ -50,6 +51,7 @@ const routeConfig: RouteObject[] = [
           { path: routes.mockTestSession, element: <MockTestSessionPage /> },
           { path: routes.mockTestReport, element: <MockTestReportPage /> },
           { path: routes.liveInterviewActive, element: <LiveSessionPage /> },
+          { path: routes.liveInterviewReport, element: <LiveInterviewReportPage /> },
 
           // Dashboard layout (shared sidebar)
           {

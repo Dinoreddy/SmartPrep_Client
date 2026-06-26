@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -171,6 +171,39 @@ export default function AnalyticsPage() {
   const [trajectoryRange, setTrajectoryRange] = useState("30d");
   const [voiceRange, setVoiceRange] = useState("30d");
 
+  const [trajectoryRangeOpen, setTrajectoryRangeOpen] = useState(false);
+  const [voiceRangeOpen, setVoiceRangeOpen] = useState(false);
+  const trajectoryRangeRef = useRef<HTMLDivElement>(null);
+  const voiceRangeRef = useRef<HTMLDivElement>(null);
+
+  const rangeLabels: Record<string, string> = {
+    "7d": "Last 7 Days",
+    "30d": "Last 30 Days",
+    "90d": "Last 90 Days",
+    "all": "All Time",
+  };
+
+  // Close the dropdowns when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        trajectoryRangeRef.current &&
+        !trajectoryRangeRef.current.contains(e.target as Node)
+      ) {
+        setTrajectoryRangeOpen(false);
+      }
+      if (voiceRangeRef.current && !voiceRangeRef.current.contains(e.target as Node)) {
+        setVoiceRangeOpen(false);
+      }
+    }
+    if (trajectoryRangeOpen || voiceRangeOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [trajectoryRangeOpen, voiceRangeOpen]);
+
   // Fetch charts data dynamically mapping each separate parameter filter
   const { data, isLoading } = useQuery({
     queryKey: ["analyticsCharts", trajectoryRange, voiceRange],
@@ -265,16 +298,45 @@ export default function AnalyticsPage() {
                   MCQ mock test accuracy scores over time
                 </p>
               </div>
-              <select
-                value={trajectoryRange}
-                onChange={(e) => setTrajectoryRange(e.target.value)}
-                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-850 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all cursor-pointer shadow-sm hover:border-slate-300 dark:hover:border-slate-700"
-              >
-                <option value="7d">Last 7 Days</option>
-                <option value="30d">Last 30 Days</option>
-                <option value="90d">Last 90 Days</option>
-                <option value="all">All Time</option>
-              </select>
+              <div className="relative" ref={trajectoryRangeRef}>
+                <button
+                  type="button"
+                  onClick={() => setTrajectoryRangeOpen(!trajectoryRangeOpen)}
+                  className="px-3 py-1.5 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-750 transition-all flex items-center justify-between gap-1.5 cursor-pointer outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                >
+                  <span>{rangeLabels[trajectoryRange]}</span>
+                  <span className={`material-symbols-outlined text-[16px] text-slate-400 dark:text-slate-500 transition-transform duration-200 ${trajectoryRangeOpen ? 'rotate-180' : ''}`}>
+                    expand_more
+                  </span>
+                </button>
+
+                {trajectoryRangeOpen && (
+                  <div className="absolute right-0 top-full mt-1.5 w-40 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-lg dark:shadow-slate-950/80 overflow-hidden z-50 animate-fade-in-up py-1">
+                    {Object.entries(rangeLabels).map(([val, label]) => (
+                      <button
+                        key={val}
+                        type="button"
+                        onClick={() => {
+                          setTrajectoryRange(val);
+                          setTrajectoryRangeOpen(false);
+                        }}
+                        className={`w-full px-3 py-2 text-left text-xs font-semibold flex items-center justify-between transition-colors ${
+                          trajectoryRange === val
+                            ? "bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary"
+                            : "text-slate-700 dark:text-slate-355 hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer"
+                        }`}
+                      >
+                        <span>{label}</span>
+                        {trajectoryRange === val && (
+                          <span className="material-symbols-outlined text-[14px] text-primary">
+                            check
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
             {trajectoryData.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-[300px] text-center p-6 bg-slate-50/50 dark:bg-slate-800/10 rounded-xl border border-dashed border-slate-200 dark:border-slate-800">
@@ -351,16 +413,45 @@ export default function AnalyticsPage() {
                   AI-graded scores of chronological voice sessions
                 </p>
               </div>
-              <select
-                value={voiceRange}
-                onChange={(e) => setVoiceRange(e.target.value)}
-                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-850 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all cursor-pointer shadow-sm hover:border-slate-300 dark:hover:border-slate-700"
-              >
-                <option value="7d">Last 7 Days</option>
-                <option value="30d">Last 30 Days</option>
-                <option value="90d">Last 90 Days</option>
-                <option value="all">All Time</option>
-              </select>
+              <div className="relative" ref={voiceRangeRef}>
+                <button
+                  type="button"
+                  onClick={() => setVoiceRangeOpen(!voiceRangeOpen)}
+                  className="px-3 py-1.5 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-750 transition-all flex items-center justify-between gap-1.5 cursor-pointer outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                >
+                  <span>{rangeLabels[voiceRange]}</span>
+                  <span className={`material-symbols-outlined text-[16px] text-slate-400 dark:text-slate-500 transition-transform duration-200 ${voiceRangeOpen ? 'rotate-180' : ''}`}>
+                    expand_more
+                  </span>
+                </button>
+
+                {voiceRangeOpen && (
+                  <div className="absolute right-0 top-full mt-1.5 w-40 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-lg dark:shadow-slate-950/80 overflow-hidden z-50 animate-fade-in-up py-1">
+                    {Object.entries(rangeLabels).map(([val, label]) => (
+                      <button
+                        key={val}
+                        type="button"
+                        onClick={() => {
+                          setVoiceRange(val);
+                          setVoiceRangeOpen(false);
+                        }}
+                        className={`w-full px-3 py-2 text-left text-xs font-semibold flex items-center justify-between transition-colors ${
+                          voiceRange === val
+                            ? "bg-primary/5 text-primary dark:bg-primary/10 dark:text-primary"
+                            : "text-slate-700 dark:text-slate-355 hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer"
+                        }`}
+                      >
+                        <span>{label}</span>
+                        {voiceRange === val && (
+                          <span className="material-symbols-outlined text-[14px] text-primary">
+                            check
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
             {voicePerformanceData.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-[300px] text-center p-6 bg-slate-50/50 dark:bg-slate-800/10 rounded-xl border border-dashed border-slate-200 dark:border-slate-800">

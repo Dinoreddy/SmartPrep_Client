@@ -184,10 +184,14 @@ export default function LiveInterviewLandingPage() {
           ) : (
             <div className="flex flex-col gap-2">
               {recentSessions.map((session) => (
-                <a
+                <button
                   key={session.id}
-                  href="#"
-                  className="group flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-all"
+                  onClick={() =>
+                    navigate(
+                      routes.liveInterviewReport.replace(":sessionId", session.id)
+                    )
+                  }
+                  className="group flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-all text-left w-full"
                 >
                   <div className="flex flex-col gap-1">
                     <p className="text-sm font-semibold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
@@ -200,7 +204,7 @@ export default function LiveInterviewLandingPage() {
                   <span className="material-symbols-outlined text-slate-300 group-hover:text-slate-500 text-[20px]">
                     chevron_right
                   </span>
-                </a>
+                </button>
               ))}
             </div>
           )}

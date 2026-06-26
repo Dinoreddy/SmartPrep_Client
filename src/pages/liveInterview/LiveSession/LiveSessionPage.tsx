@@ -5,6 +5,7 @@ import { MessageBubble } from "./components/MessageBubble";
 import { WaveformVisualizer } from "./components/WaveformVisualizer";
 import { ControlBar } from "./components/ControlBar";
 import { useLiveSession } from "./hooks/useLiveSession";
+import { routes } from "@/routes/paths";
 
 export const LiveSessionPage: React.FC = () => {
   const navigate = useNavigate();
@@ -39,7 +40,11 @@ export const LiveSessionPage: React.FC = () => {
 
   const handleEndSession = () => {
     endSession();
-    navigate(`/mock-test/report/${interviewId || "mock-id"}`);
+    if (interviewId) {
+      navigate(routes.liveInterviewReport.replace(":sessionId", interviewId));
+    } else {
+      navigate(routes.liveInterview);
+    }
   };
 
   const toggleRecording = () => {

@@ -34,21 +34,27 @@ const processQueue = (error: unknown) => {
 api.interceptors.response.use(
   (res) => res,
   async (error) => {
-    const original = error.config as typeof error.config & {
+    const original = error.config as (typeof error.config & {
       _retry?: boolean;
-    };
+    }) | undefined;
 
-    if (error.response?.status === 401 && !original._retry) {
+    const isAuthRequest = original?.url?.includes("/auth/login") || 
+                          original?.url?.includes("/auth/refresh-token") ||
+                          original?.url?.includes("/auth/register");
+
+    if (error.response?.status === 401 && !original?._retry && !isAuthRequest) {
       // Queue up any additional 401s while a refresh is in flight
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
-          .then(() => api(original))
+          .then(() => api(original!))
           .catch(Promise.reject);
       }
 
-      original._retry = true;
+      if (original) {
+        original._retry = true;
+      }
       isRefreshing = true;
 
       try {
@@ -63,12 +69,14 @@ api.interceptors.response.use(
         useAuthStore.getState().setUser(data.data.user);
 
         processQueue(null);
-        return api(original);
+        return api(original!);
       } catch (err) {
         processQueue(err);
         // Refresh failed — session is dead, send user to login
         useAuthStore.getState().clearAuth();
-        window.location.href = "/login";
+        if (window.location.pathname !== "/login") {
+          window.location.href = "/login";
+        }
         return Promise.reject(err);
       } finally {
         isRefreshing = false;

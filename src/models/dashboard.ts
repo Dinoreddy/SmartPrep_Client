@@ -42,3 +42,20 @@ export interface AudioStatsResponseData {
     maxScore: number;
   }>;
 }
+
+export interface SessionReportTranscriptEntry {
+  role: "assistant" | "user";
+  content: string;
+}
+
+export interface SessionReportData {
+  id: string;
+  status: "ACTIVE" | "COMPLETED" | "ABANDONED";
+  score: number | null;
+  feedback: string | null;
+  startedAt: string;
+  completedAt: string | null;
+  durationMinutes: number | null;
+  totalUserWords: number;
+  transcript: SessionReportTranscriptEntry[];
+}

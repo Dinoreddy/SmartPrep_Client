@@ -180,38 +180,28 @@ export default function Step2ResumeUpload({ onNext }: Step2ResumeUploadProps) {
           Your data is encrypted and secure.
         </div>
 
-        {file ? (
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={isPending}
-            className="w-full flex justify-center items-center gap-2 py-4 px-4 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {isPending ? (
-              <>
-                <span className="material-symbols-outlined text-lg animate-spin">
-                  progress_activity
-                </span>
-                Analyzing resume…
-              </>
-            ) : (
-              <>
-                Continue
-                <span className="material-symbols-outlined text-lg">
-                  arrow_forward
-                </span>
-              </>
-            )}
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={onNext}
-            className="text-gray-400 hover:text-gray-600 text-sm font-medium underline underline-offset-4 transition-colors"
-          >
-            Skip for now
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={!file || isPending}
+          className="w-full flex justify-center items-center gap-2 py-4 px-4 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {isPending ? (
+            <>
+              <span className="material-symbols-outlined text-lg animate-spin">
+                progress_activity
+              </span>
+              Analyzing resume…
+            </>
+          ) : (
+            <>
+              Continue
+              <span className="material-symbols-outlined text-lg">
+                arrow_forward
+              </span>
+            </>
+          )}
+        </button>
       </div>
     </div>
   );

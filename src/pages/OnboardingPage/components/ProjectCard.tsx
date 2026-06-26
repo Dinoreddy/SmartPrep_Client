@@ -22,9 +22,6 @@ export default function ProjectCard({
           {subtitle}
         </p>
       </div>
-      <span className="material-symbols-outlined text-slate-300 group-hover:text-indigo-600 transition-colors cursor-pointer text-xl">
-        edit
-      </span>
     </div>
   );
 }

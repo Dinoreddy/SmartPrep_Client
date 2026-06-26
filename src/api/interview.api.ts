@@ -1,4 +1,6 @@
 import api from "@/lib/axios";
+import type { ApiResponse } from "@/models/auth";
+import type { SessionReportData } from "@/models/dashboard";
 
 export interface StartInterviewResponse {
   success: boolean;
@@ -18,4 +20,11 @@ export const interviewApi = {
    * Creates the session, generates the opening question, and returns base64 audio.
    */
   start: () => api.post<StartInterviewResponse>("/interview/start"),
+
+  /**
+   * GET /interview/:interviewId/report
+   * Fetch the completed session report including score, feedback, and transcript.
+   */
+  getReport: (interviewId: string) =>
+    api.get<ApiResponse<SessionReportData>>(`/interview/${interviewId}/report`),
 };
