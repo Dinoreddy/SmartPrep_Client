@@ -2,7 +2,6 @@
 export const PAGE_META = {
   title: "Practice Room",
   subtitle: "Sharpen your skills and boost your Elo rating.",
-  globalRank: 420,
 } as const;
 
 // ── Priority weak-skill banner ────────────────────────────────────────────────

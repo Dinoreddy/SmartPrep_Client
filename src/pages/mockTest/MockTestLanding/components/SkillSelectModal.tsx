@@ -9,12 +9,16 @@ interface SkillSelectModalProps {
   skills: SkillOption[];
   onStart: (selectedSkills: string[]) => void;
   onClose: () => void;
+  isLoading?: boolean;
+  error?: string | null;
 }
 
 export default function SkillSelectModal({
   skills,
   onStart,
   onClose,
+  isLoading = false,
+  error = null,
 }: SkillSelectModalProps) {
   const [selected, setSelected] = useState<string[]>(
     // pre-select the first two skills by default
@@ -54,6 +58,16 @@ export default function SkillSelectModal({
             <span className="material-symbols-outlined text-[22px]">close</span>
           </button>
         </div>
+
+        {/* Error message */}
+        {error && (
+          <div className="mx-8 mt-4 flex items-center justify-start gap-2.5 rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/20 px-4 py-2.5 text-xs text-red-700 dark:text-red-300">
+            <span className="material-symbols-outlined text-[16px] shrink-0">
+              error
+            </span>
+            <span>{error}</span>
+          </div>
+        )}
 
         {/* ── Search ───────────────────────────────────────────────── */}
         <div className="px-8 pt-5 pb-2 shrink-0">
@@ -149,18 +163,29 @@ export default function SkillSelectModal({
 
           <button
             onClick={() => selected.length > 0 && onStart(selected)}
-            disabled={selected.length === 0}
+            disabled={selected.length === 0 || isLoading}
             className={`flex items-center gap-2.5 py-2.5 px-7 rounded-xl font-bold text-sm transition-all active:scale-[0.98] ${
-              selected.length > 0
+              selected.length > 0 && !isLoading
                 ? "bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/25"
                 : "bg-slate-200 dark:bg-slate-800 text-slate-400 cursor-not-allowed"
             }`}
           >
-            <span>Start Test</span>
-            {selected.length > 0 && (
-              <span className="bg-white/20 text-white text-xs py-0.5 px-2 rounded-full font-medium">
-                {selected.length} selected
-              </span>
+            {isLoading ? (
+              <>
+                <span className="material-symbols-outlined text-sm animate-spin">
+                  progress_activity
+                </span>
+                <span>Starting...</span>
+              </>
+            ) : (
+              <>
+                <span>Start Test</span>
+                {selected.length > 0 && (
+                  <span className="bg-white/20 text-white text-xs py-0.5 px-2 rounded-full font-medium">
+                    {selected.length} selected
+                  </span>
+                )}
+              </>
             )}
           </button>
         </div>

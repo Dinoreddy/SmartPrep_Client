@@ -81,3 +81,23 @@ export interface SubmitMockTestResponse {
     percentage: number;
   };
 }
+
+export interface RecentMockTestItem {
+  id: string;
+  date: string;
+  score: number;
+  skillsInvolved: string[];
+}
+
+export interface MockTestStatsData {
+  totalTests: number;
+  averageScore: number;
+  strongestSkill: string;
+  recentTests: RecentMockTestItem[];
+}
+
+export interface GetMockTestStatsResponse {
+  success: boolean;
+  message: string;
+  data: MockTestStatsData;
+}

@@ -5,6 +5,7 @@ interface TodayFocusBannerProps {
   description: string;
   ctaLabel: string;
   ctaIcon: string;
+  onStart?: () => void;
 }
 
 export default function TodayFocusBanner({
@@ -14,6 +15,7 @@ export default function TodayFocusBanner({
   description,
   ctaLabel,
   ctaIcon,
+  onStart,
 }: TodayFocusBannerProps) {
   return (
     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary/90 to-blue-700 shadow-lg shadow-primary/25 text-white p-8 md:p-10">
@@ -35,7 +37,10 @@ export default function TodayFocusBanner({
           </p>
         </div>
         <div className="flex-shrink-0">
-          <button className="group flex items-center gap-2 bg-white text-primary hover:bg-blue-50 transition-all duration-300 font-bold py-3 px-6 rounded-xl shadow-lg transform hover:-translate-y-0.5">
+          <button
+            onClick={onStart}
+            className="group flex items-center gap-2 bg-white text-primary hover:bg-blue-50 transition-all duration-300 font-bold py-3 px-6 rounded-xl shadow-lg transform hover:-translate-y-0.5"
+          >
             <span>{ctaLabel}</span>
             <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
               {ctaIcon}

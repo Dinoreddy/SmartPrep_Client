@@ -157,6 +157,7 @@ export default function MockTestSessionPage() {
               key={currentQuestion.questionId}
               question={currentQuestion.text}
               difficulty={currentQuestion.difficulty}
+              topic={currentQuestion.topic}
               currentIndex={currentIndex}
               totalQuestions={questions.length}
               options={currentQuestion.options}

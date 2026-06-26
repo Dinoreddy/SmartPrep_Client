@@ -122,3 +122,53 @@ body {
 .animate-fade-in-up {
   animation: fade-in-up 0.6s ease-out forwards;
 }
+
+/* ── Recharts Readability & Contrast Enhancements ──────────────── */
+.recharts-cartesian-axis-tick text,
+.recharts-polar-angle-axis-tick text {
+  fill: #334155 !important; /* High contrast slate-700 in light mode */
+  font-weight: 700 !important;
+  font-size: 11px !important;
+}
+.dark .recharts-cartesian-axis-tick text,
+.dark .recharts-polar-angle-axis-tick text {
+  fill: #e2e8f0 !important; /* High contrast slate-200 in dark mode */
+}
+.recharts-polar-radius-axis-tick text {
+  fill: #475569 !important;
+  font-weight: 600 !important;
+}
+.dark .recharts-polar-radius-axis-tick text {
+  fill: #cbd5e1 !important;
+}
+.recharts-polar-grid-angle line,
+.recharts-polar-grid-concentric path {
+  stroke: #e2e8f0 !important;
+}
+.dark .recharts-polar-grid-angle line,
+.dark .recharts-polar-grid-concentric path {
+  stroke: #334155 !important;
+}
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: #f1f5f9 !important;
+}
+.dark .recharts-cartesian-grid-horizontal line,
+.dark .recharts-cartesian-grid-vertical line {
+  stroke: #334155 !important;
+}
+
+/* ── Snackbar Entry Animations ── */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(100%) translateY(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+  }
+}
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

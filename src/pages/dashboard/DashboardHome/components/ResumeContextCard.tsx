@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+import { routes } from "@/routes/paths";
 import TechTag from "./TechTag";
 
 interface ResumeContextCardProps {
@@ -9,6 +11,7 @@ export default function ResumeContextCard({
   projects,
   techStack,
 }: ResumeContextCardProps) {
+  const navigate = useNavigate();
   return (
     <div className="lg:col-span-1 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 flex flex-col h-full">
       {/* Header */}
@@ -53,7 +56,11 @@ export default function ResumeContextCard({
 
         {/* Update button */}
         <div className="mt-auto pt-4">
-          <button className="w-full py-2 px-4 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center justify-center gap-2">
+          <button
+            type="button"
+            onClick={() => navigate(routes.profile)}
+            className="w-full py-2 px-4 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"
+          >
             <span className="material-symbols-outlined text-[18px]">edit</span>
             Update Resume
           </button>

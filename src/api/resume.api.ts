@@ -7,7 +7,7 @@
 
 import api from "@/lib/axios";
 import type { ApiResponse } from "@/models/auth";
-import type { ResumeData } from "@/models/resume";
+import type { ResumeData, ResumeProfile, UpdateProfilePayload } from "@/models/resume";
 
 export const resumeApi = {
   /**
@@ -39,4 +39,11 @@ export const resumeApi = {
    * Fetch existing resume data.
    */
   get: () => api.get<ApiResponse<ResumeData>>("/resume/"),
+
+  /**
+   * PATCH /resume/profile
+   * Manually update the parsed profile details.
+   */
+  updateProfile: (updateData: UpdateProfilePayload) =>
+    api.patch<ApiResponse<ResumeProfile>>("/resume/profile", updateData),
 };

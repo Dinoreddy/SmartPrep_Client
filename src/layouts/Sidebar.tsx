@@ -99,6 +99,16 @@ export default function Sidebar() {
                 Account
               </p>
             </div>
+            <NavLink
+              to={routes.profile}
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850 transition-colors border-b border-slate-100 dark:border-slate-800"
+            >
+              <span className="material-symbols-outlined text-[20px]">
+                person
+              </span>
+              <span>Edit Profile</span>
+            </NavLink>
             <button
               onClick={() => {
                 setMenuOpen(false);

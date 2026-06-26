@@ -9,8 +9,6 @@ import { useAuthStore } from "@/store/authStore";
 import SessionHeader from "./components/SessionHeader";
 import QuestionCard from "./components/QuestionCard";
 
-const MOCK_STREAK = 0; // We will use 0 for now until streak API is built
-
 export default function ActiveSessionPage() {
   const { skillName: rawSkillName = "react" } = useParams<{
     skillName: string;
@@ -170,10 +168,7 @@ export default function ActiveSessionPage() {
     <div className="h-screen flex flex-col overflow-hidden bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
       <SessionHeader
         skillName={skillName}
-        streak={MOCK_STREAK}
         elo={currentElo}
-        currentQuestion={currentIndex + 1}
-        totalQuestions={allQuestions.length}
         onExit={() => navigate(routes.practice)}
       />
 

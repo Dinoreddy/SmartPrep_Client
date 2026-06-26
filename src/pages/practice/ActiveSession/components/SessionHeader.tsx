@@ -3,23 +3,16 @@ import { getSkillIcon } from "@/lib/skillIconRegistry";
 
 interface SessionHeaderProps {
   skillName: string;
-  streak: number;
   elo: number;
-  currentQuestion: number; // 1-based
-  totalQuestions: number;
   onExit?: () => void;
 }
 
 export default function SessionHeader({
   skillName,
-  streak,
   elo,
-  currentQuestion,
-  totalQuestions,
   onExit,
 }: SessionHeaderProps) {
   const { icon } = getSkillIcon(skillName);
-  const progressPct = (currentQuestion / totalQuestions) * 100;
 
   return (
     <header className="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-20">
@@ -29,16 +22,13 @@ export default function SessionHeader({
           <BackButton onClick={onExit} label="Back" />
         </div>
 
-        {/* ── Center: Skill name + streak ───────────────────────── */}
+        {/* ── Center: Skill name ───────────────────────── */}
         <div className="flex items-center justify-center gap-2">
           <span className="material-symbols-outlined text-primary text-[18px] shrink-0">
             {icon}
           </span>
           <span className="font-bold text-sm text-slate-800 dark:text-slate-200 capitalize truncate">
             {skillName} Practice
-          </span>
-          <span className="hidden sm:flex items-center gap-0.5 text-xs font-semibold text-orange-500 shrink-0">
-            🔥 {streak}
           </span>
         </div>
 

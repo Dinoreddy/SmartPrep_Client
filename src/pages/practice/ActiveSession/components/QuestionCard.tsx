@@ -62,9 +62,9 @@ export default function QuestionCard({
         >
           {difficulty}
         </span>
-        {/* <span className="text-slate-400 text-xs font-medium">
+        <span className="text-slate-400 text-xs font-medium">
           {currentIndex + 1} / {totalQuestions}
-        </span> */}
+        </span>
       </div>
 
       {/* ── Question text ────────────────────────────────────────── */}

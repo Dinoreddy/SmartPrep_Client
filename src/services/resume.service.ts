@@ -8,7 +8,7 @@
 
 import { resumeApi } from "@/api/resume.api";
 import { useAuthStore } from "@/store/authStore";
-import type { ResumeData } from "@/models/resume";
+import type { ResumeData, ResumeProfile, UpdateProfilePayload } from "@/models/resume";
 
 export const resumeService = {
   /**
@@ -51,5 +51,23 @@ export const resumeService = {
     const response = await resumeApi.get();
     console.log("[resume.service] get ← response:", response.data);
     return response.data.data;
+  },
+
+  /** Manually update the parsed profile details */
+  async updateProfile(updateData: UpdateProfilePayload): Promise<ResumeProfile> {
+    console.log("[resume.service] updateProfile →", updateData);
+    const response = await resumeApi.updateProfile(updateData);
+    console.log("[resume.service] updateProfile ← response:", response.data);
+    const updatedProfile = response.data.data;
+
+    // Merge the updated resumeProfile back into the stored user
+    const user = useAuthStore.getState().user;
+    if (user) {
+      useAuthStore.getState().setUser({
+        ...user,
+        resumeProfile: updatedProfile,
+      });
+    }
+    return updatedProfile;
   },
 };

@@ -1,21 +1,112 @@
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { routes } from "@/routes/paths";
+import { dashboardApi } from "@/api/dashboard.api";
 import LiveHeroBanner from "./components/LiveHeroBanner";
-import {
-  LIVE_STAT_CARDS,
-  CONTEXT_TOPICS,
-  SUGGESTED_QUESTIONS,
-  RECENT_SESSIONS,
-} from "./constants";
+
+function StatCardsSkeleton() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {[1, 2, 3, 4].map((i) => (
+        <div
+          key={i}
+          className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-5 shadow-sm animate-pulse space-y-3"
+        >
+          <div className="flex justify-between items-center">
+            <div className="h-4 w-24 bg-slate-200 dark:bg-slate-800 rounded" />
+            <div className="h-5 w-5 bg-slate-200 dark:bg-slate-800 rounded-full" />
+          </div>
+          <div className="flex items-baseline gap-2">
+            <div className="h-8 w-16 bg-slate-200 dark:bg-slate-800 rounded" />
+          </div>
+          <div className="h-3 w-32 bg-slate-100 dark:bg-slate-850 rounded" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function RecentSessionsSkeleton() {
+  return (
+    <div className="flex flex-col gap-2">
+      {[1, 2, 3].map((i) => (
+        <div
+          key={i}
+          className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-4 shadow-sm animate-pulse flex items-center justify-between"
+        >
+          <div className="space-y-2 flex-1">
+            <div className="h-4 w-1/3 bg-slate-200 dark:bg-slate-800 rounded" />
+            <div className="h-3 w-1/4 bg-slate-150 dark:bg-slate-850 rounded" />
+          </div>
+          <div className="h-5 w-5 bg-slate-200 dark:bg-slate-800 rounded-full" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function getRelativeTime(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return "Just now";
+  if (diffMins < 60) return `${diffMins} min${diffMins > 1 ? "s" : ""} ago`;
+  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+  if (diffDays === 1) return "Yesterday";
+  return `${diffDays} days ago`;
+}
 
 export default function LiveInterviewLandingPage() {
   const navigate = useNavigate();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["audioStats"],
+    queryFn: () => dashboardApi.getAudioStats().then((res) => res.data.data),
+    staleTime: 5000,
+  });
 
   function handleInitialize() {
     // The actual interview ID is created inside the LiveSessionPage's hook,
     // so we can just pass a temp ID here to satisfy the route param.
     navigate(routes.liveInterviewActive.replace(":sessionId", "new"));
   }
+
+  const averageScore = data?.averageScore ?? 0;
+  const totalCompleted = data?.totalCompleted ?? 0;
+  const averageDuration = data?.averageDurationMinutes ?? 0;
+  const averageVerbosity = data?.averageVerbosity ?? 0;
+  const recentSessions = (data?.recentSessions ?? []).slice(0, 3);
+
+  const statCards = [
+    {
+      label: "Average Score",
+      icon: "star",
+      value: totalCompleted > 0 ? `${Math.round(averageScore)}%` : "0%",
+      description: "Overall mock performance",
+    },
+    {
+      label: "Total Completed",
+      icon: "history",
+      value: `${totalCompleted}`,
+      description: "Completed sessions count",
+    },
+    {
+      label: "Average Duration",
+      icon: "timer",
+      value: totalCompleted > 0 ? `${Math.round(averageDuration * 10) / 10}m` : "0m",
+      description: "Average minutes per mock",
+    },
+    {
+      label: "Verbosity",
+      icon: "graphic_eq",
+      value: totalCompleted > 0 ? `${averageVerbosity}` : "0",
+      description: "Words per session",
+    },
+  ];
 
   return (
     <div className="p-8">
@@ -41,98 +132,60 @@ export default function LiveInterviewLandingPage() {
         <LiveHeroBanner onInitialize={handleInitialize} />
 
         {/* ── Stat cards ───────────────────────────────────────────────── */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {LIVE_STAT_CARDS.map((card) => (
-            <div
-              key={card.label}
-              className="flex flex-col justify-between rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-all"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  {card.label}
-                </span>
-                <span className="material-symbols-outlined text-slate-400 dark:text-slate-600 text-[20px]">
-                  {card.icon}
-                </span>
+        {isLoading ? (
+          <StatCardsSkeleton />
+        ) : (
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {statCards.map((card) => (
+              <div
+                key={card.label}
+                className="flex flex-col justify-between rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-all"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    {card.label}
+                  </span>
+                  <span className="material-symbols-outlined text-slate-400 dark:text-slate-600 text-[20px]">
+                    {card.icon}
+                  </span>
+                </div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                    {card.value}
+                  </span>
+                </div>
+                <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
+                  {card.description}
+                </p>
               </div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-                  {card.value}
-                </span>
-                <span
-                  className={`text-xs font-medium px-1.5 py-0.5 rounded ${card.badgeColor}`}
-                >
-                  {card.badge}
-                </span>
-              </div>
-              <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
-                {card.description}
+            ))}
+          </section>
+        )}
+
+        {/* ── Recent Sessions ───────────────────────────────────────────── */}
+        <section className="flex flex-col gap-4">
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+            Recent Sessions
+          </h3>
+          {isLoading ? (
+            <RecentSessionsSkeleton />
+          ) : recentSessions.length === 0 ? (
+            <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 text-center shadow-sm">
+              <span className="material-symbols-outlined text-slate-400 dark:text-slate-600 text-4xl mb-2">
+                mic_off
+              </span>
+              <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                No sessions completed yet
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                Complete your first live mock interview to see performance metrics here.
               </p>
             </div>
-          ))}
-        </section>
-
-        {/* ── Two-column section ────────────────────────────────────────── */}
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left: Loaded context */}
-          <div className="lg:col-span-2 flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-                Loaded Context
-              </h3>
-              <button className="text-sm font-medium text-primary hover:text-indigo-700 transition-colors">
-                Manage Context
-              </button>
-            </div>
-
-            <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
-              {/* Topic chips */}
-              <div className="flex flex-wrap gap-2 mb-6">
-                {CONTEXT_TOPICS.map((topic) => (
-                  <span
-                    key={topic.label}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border border-slate-200 bg-slate-50 text-xs font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
-                  >
-                    <span className="material-symbols-outlined text-[14px]">
-                      {topic.icon}
-                    </span>
-                    {topic.label}
-                  </span>
-                ))}
-                <button className="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-dashed border-slate-300 hover:border-slate-400 bg-transparent text-xs font-medium text-slate-500 hover:text-slate-700 dark:border-slate-600 dark:hover:border-slate-500 dark:text-slate-400 dark:hover:text-slate-200 transition-colors">
-                  <span className="material-symbols-outlined text-[14px]">
-                    add
-                  </span>
-                  Add Topic
-                </button>
-              </div>
-
-              {/* Suggested questions */}
-              <h4 className="text-xs font-semibold uppercase text-slate-400 dark:text-slate-500 mb-3 tracking-wider">
-                Suggested Questions Preview
-              </h4>
-              <div className="space-y-3">
-                {SUGGESTED_QUESTIONS.map((q) => (
-                  <div key={q} className="flex gap-3 items-start group">
-                    <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-slate-300 dark:bg-slate-600 group-hover:bg-primary transition-colors shrink-0" />
-                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                      {q}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Right: Recent sessions */}
-          <div className="flex flex-col gap-4">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-              Recent Sessions
-            </h3>
+          ) : (
             <div className="flex flex-col gap-2">
-              {RECENT_SESSIONS.map((session) => (
+              {recentSessions.map((session) => (
                 <a
-                  key={session.title}
+                  key={session.id}
                   href="#"
                   className="group flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-all"
                 >
@@ -141,7 +194,7 @@ export default function LiveInterviewLandingPage() {
                       {session.title}
                     </p>
                     <p className="text-xs text-slate-500">
-                      {session.time} • {session.duration} duration
+                      {getRelativeTime(session.completedAt)} • Score: {session.score}/{session.maxScore}
                     </p>
                   </div>
                   <span className="material-symbols-outlined text-slate-300 group-hover:text-slate-500 text-[20px]">
@@ -150,7 +203,7 @@ export default function LiveInterviewLandingPage() {
                 </a>
               ))}
             </div>
-          </div>
+          )}
         </section>
 
         {/* ── Footer ───────────────────────────────────────────────────── */}

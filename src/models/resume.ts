@@ -32,3 +32,10 @@ export interface ResumeData {
   /** Map of skill name → Elo rating */
   skillElo: Record<string, number>;
 }
+
+export interface UpdateProfilePayload {
+  seniority?: "Junior" | "Mid" | "Senior" | string;
+  yoe?: number;
+  skills?: string[];
+  projects?: ResumeProject[];
+}

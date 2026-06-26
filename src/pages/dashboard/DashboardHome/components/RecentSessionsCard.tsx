@@ -31,9 +31,15 @@ export default function RecentSessionsCard({
         </a>
       </div>
       <div className="p-2">
-        {sessions.map((session) => (
-          <SessionRow key={session.title} {...session} />
-        ))}
+        {sessions.length === 0 ? (
+          <div className="text-center py-10 text-slate-400 dark:text-slate-500 font-semibold text-sm">
+            No recent sessions completed yet.
+          </div>
+        ) : (
+          sessions.map((session) => (
+            <SessionRow key={session.title} {...session} />
+          ))
+        )}
       </div>
     </div>
   );

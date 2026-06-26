@@ -6,6 +6,7 @@ import type {
   GetMockTestResponse,
   SubmitMockTestPayload,
   SubmitMockTestResponse,
+  GetMockTestStatsResponse,
 } from "@/models/mockTest";
 
 const MOCK_TEST_BASE_URL = "/mock-tests";
@@ -29,4 +30,8 @@ export const mockTestApi = {
       `${MOCK_TEST_BASE_URL}/${testId}/submit`,
       payload,
     ),
+
+  /** GET /api/v1/mock-tests/stats - Fetch aggregated statistics and recent history */
+  getStats: () =>
+    api.get<GetMockTestStatsResponse>(`${MOCK_TEST_BASE_URL}/stats`),
 };

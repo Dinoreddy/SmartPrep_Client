@@ -12,6 +12,7 @@ const OPTION_LABELS = ["A", "B", "C", "D"] as const;
 interface TestQuestionCardProps {
   question: string;
   difficulty: Difficulty;
+  topic: string;
   currentIndex: number;
   totalQuestions: number;
   options: string[];
@@ -24,6 +25,7 @@ interface TestQuestionCardProps {
 export default function TestQuestionCard({
   question,
   difficulty,
+  topic,
   currentIndex,
   totalQuestions,
   options,
@@ -45,9 +47,14 @@ export default function TestQuestionCard({
         >
           {difficulty}
         </span>
-        <span className="text-slate-400 text-xs font-medium">
-          {currentIndex + 1} / {totalQuestions}
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/30 uppercase tracking-wider">
+            {topic}
+          </span>
+          <span className="text-slate-400 text-xs font-medium">
+            {currentIndex + 1} / {totalQuestions}
+          </span>
+        </div>
       </div>
 
       {/* ── Question text ─────────────────────────────────────────── */}

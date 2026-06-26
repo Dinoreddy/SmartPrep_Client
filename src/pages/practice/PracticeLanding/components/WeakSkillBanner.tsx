@@ -7,6 +7,7 @@ interface WeakSkillBannerProps {
   description: string;
   ctaLabel: string;
   onStart?: () => void;
+  isLoading?: boolean;
 }
 
 export default function WeakSkillBanner({
@@ -18,7 +19,24 @@ export default function WeakSkillBanner({
   description,
   ctaLabel,
   onStart,
+  isLoading,
 }: WeakSkillBannerProps) {
+  if (isLoading) {
+    return (
+      <div className="relative overflow-hidden rounded-2xl bg-amber-50 dark:bg-amber-950/10 p-8 md:p-12 shadow-sm animate-pulse border border-amber-100/50 dark:border-amber-900/20">
+        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex-1 w-full text-center md:text-left space-y-4">
+            <div className="h-6 w-32 bg-amber-200/50 dark:bg-amber-900/40 rounded-full mx-auto md:mx-0" />
+            <div className="h-10 w-2/3 bg-slate-200 dark:bg-slate-700 rounded-lg mx-auto md:mx-0" />
+            <div className="h-6 w-1/2 bg-slate-200/80 dark:bg-slate-700/80 rounded-md mx-auto md:mx-0" />
+            <div className="h-4 w-5/6 bg-slate-200/60 dark:bg-slate-700/60 rounded-md mx-auto md:mx-0" />
+          </div>
+          <div className="shrink-0 h-14 w-48 bg-slate-200 dark:bg-slate-700 rounded-xl" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative overflow-hidden rounded-2xl bg-[#FFF8E1] dark:bg-amber-900/20 p-8 md:p-12 shadow-sm group hover:shadow-md transition-all">
       {/* Decorative blobs */}

@@ -23,6 +23,8 @@ import MockTestReportPage from "@/pages/mockTest/MockTestReport";
 import LiveInterviewLandingPage from "@/pages/liveInterview/LiveInterviewLanding";
 import { LiveSessionPage } from "@/pages/liveInterview/LiveSession/LiveSessionPage";
 import NotFoundPage from "@/pages/NotFoundPage";
+import AnalyticsPage from "@/pages/analytics";
+import ProfilePage from "@/pages/profile";
 
 const routeConfig: RouteObject[] = [
   // ── Public-only (redirect to /dashboard if already logged in) ─────────────
@@ -60,8 +62,8 @@ const routeConfig: RouteObject[] = [
                 path: routes.liveInterview,
                 element: <LiveInterviewLandingPage />,
               },
-              // { path: routes.analytics,    element: <AnalyticsPage /> },
-              // { path: routes.profile,      element: <ProfilePage /> },
+              { path: routes.analytics,    element: <AnalyticsPage /> },
+              { path: routes.profile,      element: <ProfilePage /> },
             ],
           },
         ],
